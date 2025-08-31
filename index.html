@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Download</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #6a1b9a;
+    }
+    #searchInput {
+      padding: 12px;
+      width: 100%;
+      margin: 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .song-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.4s ease-in-out;
+    }
+    .song-card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .song-card a {
+      padding: 6px 14px;
+      background: #4CAF50;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .song-card a:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎵 Search & Download Music</h2>
+  <input type="text" id="searchInput" placeholder="🔍 Search songs...">
+
+  <div id="songList">
+    <div class="song-card">
+      <p>🎶 Mal Pan Podak</p>
+      <a href="https://example.com/song1.mp3" target="_blank">Download</a>
+    </div>
+    <div class="song-card">
+      <p>🎶 Oba Ma Hamuwu</p>
+      <a href="https://example.com/song2.mp3" target="_blank">Download</a>
+    </div>
+    <div class="song-card">
+      <p>🎶 Sanda Madale</p>
+      <a href="https://example.com/song3.mp3" target="_blank">Download</a>
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const songs = document.querySelectorAll(".song-card");
+
+    // show animation
+    function showSongs() {
+      songs.forEach((card, i) => {
+        setTimeout(() => card.classList.add("show"), i * 200);
+      });
+    }
+    showSongs();
+
+    // filter
+    searchInput.addEventListener("keyup", () => {
+      let filter = searchInput.value.toLowerCase();
+      songs.forEach(card => {
+        let text = card.innerText.toLowerCase();
