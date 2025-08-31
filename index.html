@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Download</title>
+  <title>Jamendo Music Search</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -54,38 +54,59 @@
 </head>
 <body>
 
-  <h2>🎵 Search & Download Music</h2>
+  <h2>🎵 Search & Download Free Music (Jamendo)</h2>
   <input type="text" id="searchInput" placeholder="🔍 Search songs...">
 
-  <div id="songList">
-    <div class="song-card">
-      <p>🎶 Mal Pan Podak</p>
-      <a href="https://example.com/song1.mp3" target="_blank">Download</a>
-    </div>
-    <div class="song-card">
-      <p>🎶 Oba Ma Hamuwu</p>
-      <a href="https://example.com/song2.mp3" target="_blank">Download</a>
-    </div>
-    <div class="song-card">
-      <p>🎶 Sanda Madale</p>
-      <a href="https://example.com/song3.mp3" target="_blank">Download</a>
-    </div>
-  </div>
+  <div id="songList"></div>
 
   <script>
     const searchInput = document.getElementById("searchInput");
-    const songs = document.querySelectorAll(".song-card");
+    const songList = document.getElementById("songList");
 
-    // show animation
-    function showSongs() {
-      songs.forEach((card, i) => {
-        setTimeout(() => card.classList.add("show"), i * 200);
-      });
+    async function searchSongs(query) {
+      if (!query) {
+        songList.innerHTML = "";
+        return;
+      }
+
+      let url = `https://api.jamendo.com/v3.0/tracks/?client_id=488930a6&format=json&limit=10&search=${encodeURIComponent(query)}`;
+
+      try {
+        let res = await fetch(url);
+        let data = await res.json();
+
+        songList.innerHTML = "";
+
+        if (data.results.length === 0) {
+          songList.innerHTML = "<p>No results found ❌</p>";
+          return;
+        }
+
+        data.results.forEach((track, i) => {
+          let div = document.createElement("div");
+          div.className = "song-card";
+          div.innerHTML = `
+            <p>🎶 ${track.name} - ${track.artist_name}</p>
+            <a href="${track.audio}" target="_blank">Download</a>
+          `;
+          songList.appendChild(div);
+
+          // animate cards
+          setTimeout(() => div.classList.add("show"), i * 150);
+        });
+
+      } catch (err) {
+        console.error("Error fetching:", err);
+        songList.innerHTML = "<p>⚠️ Error loading songs</p>";
+      }
     }
-    showSongs();
 
-    // filter
     searchInput.addEventListener("keyup", () => {
-      let filter = searchInput.value.toLowerCase();
-      songs.forEach(card => {
-        let text = card.innerText.toLowerCase();
+      let query = searchInput.value.trim();
+      searchSongs(query);
+    });
+  </script>
+
+</body>
+</html>
+
